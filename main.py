@@ -24,22 +24,27 @@ class Blog(db.Model):
 
 @app.route('/newpost', methods=['GET', 'POST'])
 def newpost():
-
+    title_error = "Title cannot be blank"
+    body_error = "Body cannot be blank"
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
         if title != "" and body != "":
             db.session.add(Blog(title, body))
             db.session.commit()
-            return redirect("/blog")
+            return redirect("/blog?id=" + str(len(Blog.query.all())))
         else:
-            return render_template('newpost.html',)
+            return render_template('newpost.html',title=title, body=body, title_error="" if title != "" else title_error, body_error="" if body !="" else body_error)
     if request.method == 'GET':
         return render_template('newpost.html')
     
 @app.route('/blog', methods=['GET'])
 def blog():
-    return render_template('base.html',)
+    id = request.args.get('id')
+    if id == None:
+        return render_template('blogs.html',blogs=Blog.query.all())
+    else:
+        return render_template('blog.html',blog=Blog.query.get(id))
 @app.route('/', methods=['POST', 'GET'])
 def index():
     #$return  encoded_error = request.args.get("error")

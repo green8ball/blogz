@@ -17,17 +17,34 @@ class Blog(db.Model):
     def __init__(self, title, body):
         self.title = title
         self.body = body
+        
 
     def __repr__(self):
         return '<Blog %r>' % self.title
 
-# @app.route('/newpost', methods=['GET'])
-# def newpost():
+@app.route('/newpost', methods=['GET', 'POST'])
+def newpost():
+
+    if request.method == 'POST':
+        title = request.form['title']
+        body = request.form['body']
+        if title != "" and body != "":
+            db.session.add(Blog(title, body))
+            db.session.commit()
+            return redirect("/blog")
+        else:
+            return render_template('newpost.html',)
+    if request.method == 'GET':
+        return render_template('newpost.html')
     
+@app.route('/blog', methods=['GET'])
+def blog():
+    return render_template('base.html',)
 @app.route('/', methods=['POST', 'GET'])
 def index():
     #$return  encoded_error = request.args.get("error")
-    return render_template('base.html',)
+    return redirect('/blog')
+    
 
 if __name__ == '__main__':
     app.run()

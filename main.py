@@ -10,15 +10,15 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20))
-    password = db.Column(db.String(20))
-
+    username = db.Column(db.String(20), Unique=True, nullable=False)
+    password = db.Column(db.String(20), nullable=False)
 
 class Blog(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     body = db.Column(db.String(255))
+    ower_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
 
     def __init__(self, title, body):
         self.title = title

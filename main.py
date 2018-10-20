@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
+import re
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -49,7 +50,34 @@ def newpost():
             return render_template('newpost.html',title=title, body=body, title_error="" if title != "" else title_error, body_error="" if body !="" else body_error)
     if request.method == 'GET':
         return render_template('newpost.html')
+
+
+
+@app.route("/signup", methods=['POST'])
+def create_user():
+    username = request.form['username']
+    password = request.form['password']
+    verify = request.form['verify']
+
+    error_field_blank = "Error: Field blank"
+    error_password_mismatch = "Error: Password Mismatch"
+    error_password_invalid = "Error: Password Invalid"
+    error_username_invalid = "Error: Invalid Username"
     
+    is_username_valid = re.match("^([a-zA-Z0-9@*#]{3,20})$", username)
+    is_password_valid = re.match("^([a-zA-Z0-9@*#]{3,20})$", password)
+    
+    if is_username_valid == None or username == "" or is_password_valid == None or password != verify or password == "":
+        return template_index.render(username = username, username_error = error_field_blank if username == "" else error_username_invalid if is_username_valid == None else "" , 
+                                password = "", password_error = error_field_blank if password == "" else error_password_mismatch if password != verify else error_password_invalid if is_password_valid == None else "",
+                                verify = "", verify_error = error_field_blank if verify == "" else error_password_mismatch if password != verify else error_password_invalid if is_password_valid == None else "",
+                                email = email, email_error = "" if email == "" else error_email_invalid if is_email_valid == None else "")
+    else:
+        return template_welcome.render(username = username)
+
+
+
+
 @app.route('/blog', methods=['GET'])
 def blog():
     id = request.args.get('id')

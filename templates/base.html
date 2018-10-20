@@ -1,17 +1,30 @@
-<!doctype html>
+
+<!DOCTYPE html>
+
 <html>
     <head>
-        <title>{{title}}</title>
+        <title>Blogz</title>
+        <link rel="stylesheet" href="/css/normalize.css">
+        <link rel="stylesheet" href="/css/styles.css">
     </head>
-<body>
-    <h1>
-        <td>
-            <a href="/blog">Main Blog Page</a>
-        </td>
-        <td>
-            <a href="/newpost">Add a Blog Entry</a>
-        </td>
-    </h1>
+    <body>
+        <nav>
+            <ul id="user-account">
+                <li><a href="/login">login</a></li>
+                <li><a href="/logout">logout</a></li>
+            </ul>
+            <ul>
+                <li><a href="/">home</a></li>
+                <li><a href="/blog">all posts</a></li>
+                <li><a href="/blog/newpost">new post</a></li>
+            </ul>
+        </nav>
+        
+<style>
+    .error {
+        color: red;
+    }
+</style>
     {% block content %}
     {% endblock %}
 

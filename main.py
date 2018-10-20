@@ -10,20 +10,26 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), Unique=True, nullable=False)
+    username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(20), nullable=False)
+
+    def __init__(self, username):
+        self.username = username
+
+    def __repr__(self):
+        return '<User %r>' % self.username
 
 class Blog(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     body = db.Column(db.String(255))
-    ower_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
+    owner_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
-    def __init__(self, title, body):
+    def __init__(self, title, body, owner_id):
         self.title = title
         self.body = body
-        
+        self.owner_id = owner_id
 
     def __repr__(self):
         return '<Blog %r>' % self.title
